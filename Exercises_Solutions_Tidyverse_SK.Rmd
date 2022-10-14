@@ -353,8 +353,8 @@ compute_s_n <- function(n){
   tibble(n = n, s_n = sum(x), s_n_2 = sum(x))
 }
 
-n <- 1:100
+a <- 1:100
 
-df <- map_df(n, compute_s_n)
+df <- map_df(a, compute_s_n)
 ```
 
