@@ -1,0 +1,464 @@
+
+## Part 1 exercises 
+
+
+1\. In the `murders` dataset, the region is a categorical variable and the following is its distribution:
+  
+```{r summaries-barplot-exercise, echo=FALSE}
+library(dslabs)
+ds_theme_set()
+data(murders)
+murders |> group_by(region) |>
+  summarize(n = n()) |>
+  mutate(Proportion = n/sum(n), 
+         region = reorder(region, Proportion)) |>
+  ggplot(aes(x=region, y=Proportion, fill=region)) + 
+  geom_bar(stat = "identity", show.legend = FALSE) + 
+  xlab("")
+```
+
+To the closest 5%, what proportion of the states are in the North Central region?
+Answer: 0.25 or 25%.
+The question asks for the value of the height of the green bar of North Central. The values of the y-axis are plotted in steps of 0.1 for the major ticks and in steps of 0.05 for the minor ticks. It can be seen that the green bar passes the value of 0.2 but not quite the value of 0.25, but comes very close to it.
+
+Numerically the value can verified with the table of proportion of the states in the North Central region to be indeed round about 25%.
+
+```{r}
+library(tidyverse)
+library(dslabs)
+murders %>% group_by(region) %>%
+  summarize(n = n()) %>%
+  mutate(Proportion = n/sum(n), region = reorder(region, Proportion))
+```
+
+  
+  
+2\. Which of the following is true:
+  
+a. The graph above is a histogram.
+b. The graph above shows only four numbers with a bar plot. -> correct
+c. Categories are not numbers, so it does not make sense to graph the distribution.
+d. The colors, not the height of the bars, describe the distribution.
+Answer b.
+The graph is a visualization of a vector in a bar plot. The other possible answers simply do not make any sense.
+
+
+3\. The plot below shows the eCDF for male heights:
+  
+  
+```{r summaries-ecdf-exercise, echo=FALSE}
+heights |> filter(sex == "Male") |> ggplot(aes(height)) + 
+  stat_ecdf() +
+  ylab("F(a)") + xlab("a")
+```
+
+Based on the plot, what percentage of males are shorter than 75 inches?
+  
+a. 100%
+b. 95% -> correct
+c. 80%
+d. 72 inches
+
+Answer b.
+The tics of the x-axis are labeled in steps of 10 ranging from 50 to 80 inches. The tics of the y-axis are labeled in steps of 0.25 ranging from 0 to 1.
+First, the value of 75 inches can be found on the x-axis labeled as “a”. Then at the crossing of the graph the value for the percentage “F(a)” is slightly below 1.00, which will be about at 0.95. This value corresponds to 95%.
+The plot below illustrates the description.
+
+```{r}
+heights %>% filter(sex == "Male") %>% 
+  ggplot(aes(height)) + stat_ecdf() + ylab("F(a)") + xlab("a")+
+  geom_segment(aes(x = 75, y = 0.0, xend = 75, yend = 0.95), color="green",size=0.3) +
+  geom_segment(aes(x = 50, y = 0.95, xend = 75, yend = 0.95), color="green",size=0.3)
+```
+
+
+4\. To the closest inch, what height `m` has the property that 1/2 of the male students are taller than `m` and 1/2 are shorter?
+  
+a. 61 inches
+b. 64 inches
+c. 69 inches -> correct
+d. 74 inches
+Answer c. 
+The question relates to the graph in the previous question. Here the graph is divided into equal parts at the percentage of 50% with F(a)=0.5
+. Therefore, the one half of the points is below the other half is above this value. By looking at the y-axis at 0.50 we cross the graph for a slightly below 70 inches, which will be 69 inches.
+The plot below illustrates the description.
+```{r}
+heights %>% filter(sex == "Male") %>% 
+  ggplot(aes(height)) + stat_ecdf() + ylab("F(a)") + xlab("a") +
+  geom_segment(aes(x = 69, y = 0.0, xend = 69, yend = 0.5), color="green",size=0.3) +
+  geom_segment(aes(x = 50, y = 0.5, xend = 69, yend = 0.5), color="green",size=0.3)
+```
+
+
+5\. Here is an eCDF of the murder rates across states:
+  
+```{r summaries-ecdf-exercise-2, echo=FALSE}
+murders |> mutate(murder_rate = total/population * 10^5) |>
+  ggplot(aes(murder_rate)) + 
+  stat_ecdf() +
+  ylab("F(a)") + xlab("a")
+```
+
+Knowing that there are 51 states (counting DC) and based on this plot, how many states have murder rates larger than 10 per 100,000 people?
+  
+a. 1 -> correct
+b. 5
+c. 10
+d. 50 
+Answer a, one state has a murder rate larger than 10 per 100.000 people.
+The graph shows on the x-axis the murder rate =a
+. On the y-axis the fraction of the number of states is shown =F(a)
+. If 100% (or 1) corresponds to 51 states then one state corresponds to roughly 2% or 0,02 points. Therefore, the graph is shaped in small steps, which means that by increasing the murder rate the fraction of states encompassing these rates grows in steps of 0,02 points. At a=10
+ the graph is at about F(10)=0,98
+ points, therefore missing just one state.
+The answer can be verified by looking at the actual data in the table below.
+```{r}
+murders %>% mutate(murder_rate = total/population * 10^5) %>% arrange(desc(murder_rate))
+```
+
+
+
+6\. Based on the eCDF above, which of the following statements are true:
+  
+a. About half the states have murder rates above 7 per 100,000 and the other half below.
+b. Most states have murder rates below 2 per 100,000.
+c. All the states have murder rates above 2 per 100,000. 
+d. With the exception of 4 states, the murder rates are below 5 per 100,000. -> correct
+Answer d. 
+At a=5
+ the graph is at F(5)=0,92
+ points, therefore there are only 5 states, which have murder rates above 5 per 100.000 people. Answer a is wrong, because half the states have a murder rate at roughly about 3 per 100.000 people and the other half above. Answer b is wrong, the opposite is true, most states have murder rates above 2 per 100.000. Answer c is wrong, because there are many states with murder rates below 2 per 100.000.
+
+7\. Below is a histogram of male heights in our `heights` dataset: 
+  
+```{r summaries-height-histogram-exercise, echo=FALSE}
+heights |> 
+  filter(sex == "Male") |> 
+  ggplot(aes(height)) + 
+  geom_histogram(binwidth = 1, color = "black")
+```
+
+Based on this plot, how many males are between 63.5 and 65.5?
+  
+a. 10
+b. 24
+c. 34 -> correct
+d. 100
+Answer none (47).
+This question seem to ask for values that has a deviation from the data set. First, the range of 63.5 to 65.5 contains two bins. One bin 63.5 to 64.5 contains 11 data points and the second bin from 64.5 to 65.5 contains 36 data points, which in total sums up to 47 data points.
+```{r}
+library(tidyverse)
+heights %>% 
+  filter(sex == "Male") %>% 
+  ggplot(aes(height)) + 
+  geom_histogram(binwidth = 1, color = "black") +
+  geom_segment(aes(x = 63.5, y = 0.0, xend = 63.5, yend = 35), color="blue",size=0.3) +
+  geom_segment(aes(x = 65.5, y = 0.0, xend = 65.5, yend = 35), color="blue",size=0.3) +
+  geom_segment(aes(x = 50, y = 35, xend = 65.5, yend = 35), color="blue",size=0.3) +
+  geom_segment(aes(x = 50, y = 12, xend = 64.5, yend = 12), color="blue",size=0.3) +
+  annotate("text", x = 51, y =15 , label = paste(c(12,""), collapse = " "),color="blue")+
+  annotate("text", x = 51, y =38 , label = paste(c(35,""), collapse = " "),color="blue")
+```
+
+
+8\. About what **percentage** are shorter than 60 inches?
+  
+a. 1% -> correct
+b. 10%
+c. 25%
+d. 50%
+
+Answer a.
+There are about 1.2% man who are shorter than 60 inches.
+```{r}
+n60<-heights %>%  filter(sex == "Male" & height<60) %>% summarise(n=n())
+n<-heights %>%  filter(sex == "Male") %>% summarise(n=n())
+n60/n*100
+```
+
+
+9\. Based on the density plot below, about what proportion of US states have populations larger than 10 million?
+  
+```{r summaries-density-exercise, echo=FALSE}
+murders |> ggplot(aes(x=population/10^6)) + 
+  geom_density(fill = "grey") + 
+  scale_x_log10() +
+  xlab("Population in millions")
+```
+
+a. 0.02
+b. 0.15 -> correct
+c. 0.50
+d. 0.55
+Answer b.
+The question asks about the size of the area at the right hand side of the blue line (beyond 10 million residents). The total are of the density plot is computed such that it adds up to unity. So a proportion of 0.5 means a division of the area into equally separated parts. The blue line does not divide the are into two equal parts, therefore answer c (0.5) and d (0.55) cannot be right. For answer a to be true the blue line must be located at in the far right or left area of the graph. So the proportion of answer b of 15% sounds about right. This area is shown in light blue in the plot below.
+```{r}
+m <- ggplot(murders, aes(x = population/10^6)) + geom_density() + scale_x_continuous(trans="log10") 
+#p <- ggplot_build(m)
+pdat<-layer_data(m) %>% select(x,y) 
+
+pdat %>% ggplot(aes(x=x,y=y))  + 
+  geom_line() + 
+  scale_x_continuous(label= function(x) round(10^{x},0), breaks=c(0.0,0.5,1.0,1.48)) +
+  ylim(0,0.87) + 
+  geom_ribbon(data=subset(pdat,x>=1), aes(ymin=0,ymax=y),fill="lightblue") +
+  geom_ribbon(data=subset(pdat,x<1), aes(ymin=0,ymax=y),fill="gray") + 
+  xlab("Population in millions") + 
+  ylab("density")
+```
+The answer b of 15% can be verified numerically by looking up the number of states with a population larger than 10 million, which are 7 states. Then by dividing this number of states by the total number of states results in the fraction of 0.14.
+
+```{r}
+library(dplyr)
+library(dslabs)
+p<-murders %>% mutate(tenmil = population>=10000000)  %>% group_by(tenmil) %>% summarise(num=n()) %>% .$num
+p
+p[1]+p[2]
+p[2]/(p[1]+p[2])
+```
+
+
+10\. Below are three density plots. Is it possible that they are from the same dataset? 
+  
+```{r summaries-density-exercise-2, echo=FALSE, warning=FALSE, message=FALSE}
+library(gridExtra)
+p1 <- murders |> ggplot(aes(x=population/10^6)) + 
+  geom_density(fill = "grey", bw = 5) + xlab("Population in millions") + ggtitle("1")
+p2 <- murders |> ggplot(aes(x=population/10^6)) + 
+  geom_density(fill = "grey", bw = .05) + scale_x_log10() + xlab("Population in millions") + ggtitle("2")
+p3 <- murders |> ggplot(aes(x=population/10^6)) + 
+  geom_density(fill = "grey", bw = 1) + scale_x_log10() + xlab("Population in millions") + ggtitle("3")
+grid.arrange(p1,p2,p3,ncol=2)
+```
+
+Which of the following statements is true:
+  
+a. It is impossible that they are from the same dataset.
+b. They are from the same dataset, but the plots are different due to code errors.
+c. They are the same dataset, but the first and second plot undersmooth and the third oversmooths.
+d. They are the same dataset, but the first is not in the log scale, the second undersmooths, and the third oversmooths. -> correct
+
+Answer d. 
+The x-axis of the first plot is linear, because of the equal tick distances in steps of 10. The x-axis of the other charts are plotted with logarithmic distance, with increasing distances from 1, 3, 7, 20. The first plot is not under smoothed, as suggested by answer c, due to the lack of multiple peaks. The curvature of plot one is smooth and shows only one peak.
+
+## Part 2 exercises
+
+
+## Exercises 
+
+1\. Define variables containing the heights of males and females like this:
+  
+```{r, eval=FALSE}
+library(dslabs)
+data(heights)
+male <- heights$height[heights$sex == "Male"]
+female <- heights$height[heights$sex == "Female"]
+```
+
+How many measurements do we have for each?
+male: 812
+female: 238
+
+The number of measurements equals the number of elements in each vector of male and female. Therefore, by measuring the number of elements in the vectors provides the number of measurements. In this case it is 812 for males and 238 for females.
+
+```{r}
+length(male)
+length(female)
+```
+
+
+  
+2\. Suppose we can't make a plot and want to compare the distributions side by side. We can't just list all the numbers. Instead, we will look at the percentiles. Create a five row table showing `female_percentiles` and `male_percentiles` with the 10th, 30th, 50th, 70th, & 90th percentiles for each sex. Then create a data frame with these two as columns.
+```{r}
+library(dslabs)
+data(heights)
+male <- heights$height[heights$sex == "Male"]
+percentiles<-c(0.1,0.3,0.5,0.7,0.9)
+male_percentiles<-quantile(male, percentiles)
+female <- heights$height[heights$sex == "Female"]
+female_percentiles<-quantile(female, percentiles)
+data.frame(male_percentiles,female_percentiles)
+```
+
+
+3\. Study the following boxplots showing population sizes by country:
+  
+```{r summaries-boxplot-exercise, echo=FALSE, message=FALSE}
+library(tidyverse)
+library(dslabs)
+ds_theme_set()
+data(gapminder)
+tab <- gapminder |> filter(year == 2010) |> group_by(continent) |> select(continent, population)  
+tab |> ggplot(aes(x=continent, y=population/10^6)) + 
+  geom_boxplot() + 
+  scale_y_continuous(trans = "log10", breaks = c(1,10,100,1000)) + ylab("Population in millions")
+```
+
+Which continent has the country with the biggest population size?
+  
+  4\. What continent has the largest median population size?
+  Africa
+  The median in the boxplot is indicated my a horizontal bold line withing the box. By comparing all median values for every continent, it is obvious that the largest one is for Africa.
+  
+  5\. What is median population size for Africa to the nearest million? 
+  10 million
+  The median population size for Africa is nearest to 10 million people.
+  6\. What proportion of countries in Europe have populations below 14 million?
+  
+a. 0.99
+b. 0.75 -> correct
+c. 0.50
+d. 0.25
+
+Answer b.
+By inspecting the box of Europa in the plot one sees that the 75th percentile is slightly above the border of the population size of 10 million people. The median (50th percentile) is slightly below 10 million and the 25th percentile is slightly above the border of 5 million people. Although, it is hard to image where the value of 14 million is supposed to be, one can still reason that the percentile, that is nearest to this value is the 75th percentile.
+
+7\. If we use a log transformation, which continent shown above has the largest interquartile range?
+America
+
+The interquartile range is the distance from the smallest to the largest country regarding the population size.
+
+Just by looking at the range of the largest lines (whiskers) of the plot, which are Americas and Asia one could conclude that because the whisker of Americas is slightly larger than the whisker of Asia also the range of Americas is larger than that of Asia. Therefore, Americas has the largest interquartile range on the log plot.  
+
+However, since the y-axis is plotted in log scale the magnitude of the top part of the whiskers is larger than the same size of the whisker at the bottom part.   Therefore, comparing the top areas of the whiskers of Americas and Asia, the part of Asia towers above the part of Americas significantly. From visual inspection the actual range of Americas is roughly 300 million and the range of Asia is more than 1000 million. Essentially, the maximum value of the whisker determines its range, because due to the log scale the minimum value is so small in magnitude that it can be neglected. In fact, the interquartile range of Asia is larger than that of America.
+
+Numerically, it can be seen from the table below, that the actual largest range is indeed that of Asia with a value of 1340 million.
+```{r}
+library(tidyverse)
+library(dslabs)
+ds_theme_set()
+data(gapminder)
+tab <- gapminder %>% filter(year == 2010) %>% group_by(continent) %>% select(continent, population)  
+tab %>% summarise(range=(max(population)-min(population))/10^6)
+```
+
+  
+8\. Load the height data set and create a vector `x` with just the male heights:
+  
+```{r, eval=FALSE}
+library(dslabs)
+data(heights)
+x <- heights$height[heights$sex=="Male"]
+```
+
+What proportion of the data is between 69 and 72 inches (taller than 69, but shorter or equal to 72)? Hint: use a logical operator and `mean`.
+33%
+```{r}
+library(dslabs)
+data(heights)
+x <- heights$height[heights$sex=="Male"]
+a<-69
+b<-72
+mean(a < x & x <= b)
+```
+
+```{r}
+F <- function(a) mean(x<=a)
+F(b) - F(a)
+```
+```{r}
+library(magrittr)
+library(ggplot2)
+library(dslabs)
+data(heights)
+df <- heights %>% filter(sex == "Male")
+x <- df %>% pull(height)
+a <- 72
+b <- 69
+F <- function(a) mean(x<=a)
+fb<-round(F(b),2)*100
+fa<-round(F(a),2)*100
+m <- mean(x)
+s <- sd(x)
+d <- dnorm(a,m,s)
+p <- pnorm(a,m,s)
+db <- dnorm(b,m,s)
+pb <- pnorm(b,m,s)
+xm <- seq(min(x),max(x),.1)
+ym <- dnorm(xm,m,s)
+dfm <- tibble(height=xm, density=ym)
+ggplot(df,aes(height)) +
+  stat_function(fun = dnorm, args = list(mean = m, sd = s), color="blue") +
+  geom_point(aes(y=dnorm(x,m,s)),shape=3, color="black", size=1.2) +
+  geom_segment(aes(x = a, y = 0.0, xend = a, yend = d), color="blue",size=0.5) +
+  geom_segment(aes(x = b, y = 0.0, xend = b, yend = db), color="blue",size=0.5) +
+  annotate("text", x = a+2, y = d, label = paste(c(fa,"%"), collapse = " "),color="blue") +
+  annotate("text", x = b-2, y = db, label = paste(c(fb,"%"), collapse = " "),color="blue") +
+  geom_ribbon(data=subset(dfm,height<=a & height>=b), aes(ymin=0,ymax=dnorm(height,m,s)),fill="blue", alpha=0.2)+
+  ylab("Density") + xlab("Heights in inches")
+```
+
+
+9\. Suppose all you know about the data is the average and the standard deviation. Use the normal approximation to estimate the proportion you just calculated. Hint: start by computing the average and standard deviation. Then use the `pnorm` function to predict the proportions.
+```{r}
+x <- heights |> filter(sex == "Male")
+avg <- mean(x$height)
+sigma <- sd(x$height)
+pnorm(72, avg, sigma) - pnorm(69, avg, sigma)
+```
+
+
+10\. Notice that the approximation calculated in question nine is very close to the exact calculation in the first question. Now perform the same task for more extreme values. Compare the exact calculation and the normal approximation for the interval (79,81]. How many times bigger is the actual proportion than the approximation?
+```{r}
+x <- heights$height[heights$sex=="Male"]
+a<-79
+b<-81
+ap <- mean(x<=81) - mean(x<=79)
+ap
+```
+
+```{r}
+x <- heights |> filter(sex == "Male")
+avg <- mean(x$height)
+sigma <- sd(x$height)
+pn <- pnorm(81, avg, sigma) - pnorm(79, avg, sigma)
+pn
+```
+
+```{r}
+ap/pn
+```
+1.61 times bigger
+
+  11\. Approximate the distribution of adult men in the world as normally distributed with an average of 69 inches and a standard deviation of 3 inches. Using this approximation, estimate the proportion of adult men that are 7 feet tall or taller, referred to as _seven footers_. Hint: use the `pnorm` function.
+```{r}
+avg <- 69
+sd <- 3
+1 - pnorm(7*12, 69, 3)
+```
+
+12\. There are about 1 billion men between the ages of 18 and 40 in the world. Use your answer to the previous question to estimate how many of these men (18-40 year olds) are seven feet tall or taller in the world?
+```{r}
+round(1000000000 * (1-pnorm(7*12, 69, 3)))
+```
+287 men
+
+
+  13\. There are about 10 National Basketball Association (NBA) players that are 7 feet tall or higher. Using the answer to the previous two questions, what proportion of the world's 18-to-40-year-old _seven footers_ are in the NBA?
+```{r}
+10 / 287
+```
+0.035
+
+14\. Repeat the calculations performed in the previous question for Lebron James' height: 6 feet 8 inches. There are about 150 players that are at least that tall.
+```{r}
+avg <- 69
+sd <- 3
+1 - pnorm((6*12+8), 69, 3)
+pop <- round(1000000000 * (1 - pnorm((6*12+8), 69, 3)))
+pop
+150/pop
+```
+population: 122866 people
+proportion: 0.0012
+
+15\. In answering the previous questions, we found that it is not at all rare for a seven footer to become an NBA player. What would be a fair critique of our calculations:
+  
+a. Practice and talent are what make a great basketball player, not height.
+b. The normal approximation is not appropriate for heights.
+c. As seen in question 10, the normal approximation tends to underestimate the extreme values. It's possible that there are more seven footers than we predicted. -> correct
+d. As seen in question 10, the normal approximation tends to overestimate the extreme values. It's possible that there are fewer seven footers than we predicted.
+
+Answer c. 
+The calculations of the answer in question 10, show that the approximated value using the normal distribution underestimates the actual values. Also, comparing the calculation of the actual values from answer 8 to the calculation using the normal distribution approximation from answer 9, the normal distribution approximation shows a smaller value than the actual results. Therefore, the approximation underestimates the actual values as well. Underestimation means, that the actual value is larger than expected from the approximation.
+Considering the results from question 13, there are presumably more seven footer than suggested by the approximation.
