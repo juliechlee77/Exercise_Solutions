@@ -1,0 +1,103 @@
+
+## Exercises
+
+1\. Suppose you poll a population in which a proportion $p$ of voters are Democrats and $1-p$ are Republicans. Your sample size is $N=25$. Consider the random variable $S$ which is the **total** number of Democrats in your sample. What is the expected value of this random variable? Hint: it's a function of $p$.
+
+$$Np$$
+
+2\. What is the standard error of $S$ ? Hint: it's a function of $p$.
+
+$$\sqrt{(Np(1-p)}$$
+
+3\. Consider the random variable $S/N$. This is equivalent to the sample average, which we have been denoting as $\bar{X}$. What is the expected value of the $\bar{X}$? Hint: it's a function of $p$.
+
+$$p$$
+
+4\. What is the standard error of $\bar{X}$? Hint: it's a function of $p$.
+
+$$
+\sqrt{p(1-p)/N}
+$$
+
+5\. Write a line of code that gives you the standard error `se` for the problem above for several values of $p$, specifically for `p <- seq(0, 1, length = 100)`. Make a plot of `se` versus `p`.
+
+```{r}
+library(ggplot2)
+p <- seq(0, 1, length = 100)
+p
+se_p <- sqrt(p*(1-p)/25)
+se_p
+```
+```{r}
+library(ggplot2)
+dat <- data.frame(p = p, se_p = se_p)
+ggplot(dat, aes(x=se_p, y = p)) +
+  geom_point() +
+  theme_bw()
+```
+
+6\. Copy the code above and put it inside a for-loop to make the plot for $N=25$, $N=100$, and $N=1000$.
+```{r}
+library(gridExtra)
+size <- c(25, 100, 1000)
+g <- NULL
+
+for (N in 1:length(size)){ 
+  p <- seq(0, 1, length = 100)
+  se_p <- sqrt(p*(1-p)/N)
+  dat <- data.frame(p = p, se_p = se_p)
+  
+  g[[N]] <- ggplot(dat, aes(x=se_p, y = p)) +
+geom_point() +
+theme_bw()
+}
+grid.arrange(grobs = g, ncol=3)
+
+```
+
+7\. If we are interested in the difference in proportions, $p - (1-p)$, our estimate is $d = \bar{X} - (1-\bar{X})$. Use the rules we learned about sums of random variables and scaled random variables to derive the expected value of $d$.
+
+$$p - (1-p) = 2p -1$$
+expected value of a constant is a constant
+
+8\. What is the standard error of $d$?
+standard error of a constant is 0
+
+$$
+\sqrt{p(1-p)/N + (1-p)(1-(1-p))/N}
+$$
+$$
+\sqrt{[p(1-p) + p(1-p)]/N}
+$$
+
+$$
+2\sqrt{p(1-p)/N}
+$$
+
+First, a few auxiliary formulas should be recalled.
+Again, the spread is defined as d=2X¯−1.
+Then, the standard error does obey linear transformation, which means that SE[aX]=aSE[X].
+Also, the standard error of a constant is zero SE[a]=0.
+Recall from a previous exercise that SE(Xbar)=sqrt(p(1−p)/N)holds true.
+SE[d]=SE[Xbar−(1−Xbar)]=SE[2Xbar−1]=SE[2Xbar]−SE[1]=2SE[Xbar]−SE[1]=sqrt(2p(1−p)/N)
+
+9\. If the actual $p=.45$, it means the Republicans are winning by a relatively large margin since $d= -.1$, which is a 10% margin of victory. In this case, what is the standard error of $2\hat{X}-1$ if we take a sample of $N=25$?
+
+```{r}
+N<-25
+p<-0.45
+Ed<-2*p-1
+SEd<-2*sqrt(p*(1-p)/N)
+Ed
+SEd
+```
+
+10\. Given the answer to 9, which of the following best describes your strategy of using a sample size of $N=25$?
+
+a.  The expected value of our estimate $2\bar{X}-1$ is $d$, so our prediction will be right on.
+b.  Our standard error is larger than the difference, so the chances of $2\bar{X}-1$ being positive and throwing us off were not that small. We should pick a larger sample size. -> correct
+c.  The difference is 10% and the standard error is about 0.2, therefore much smaller than the difference.
+d.  Because we don't know $p$, we have no way of knowing that making $N$ larger would actually improve our standard error.
+
+Answer b.
+The standard error is inversely proportional SE∼1/N to the sample size. Therefore, the larger the sample size the smaller the standard error will be.
