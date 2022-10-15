@@ -81,6 +81,7 @@ $$
 =
 \sqrt{2p(1-p)/N}
 $$
+*But textbook says it is 2 x sqrt(p(1-p)/N)
 
 9\. If the actual $p=.45$, it means the Republicans are winning by a relatively large margin since $d= -.1$, which is a 10% margin of victory. In this case, what is the standard error of $2\hat{X}-1$ if we take a sample of $N=25$?
 
