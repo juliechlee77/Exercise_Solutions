@@ -264,7 +264,8 @@ sevenfooters * 10^9
 14\. Repeat the calculations performed in the previous question for Lebron James' height: 6 feet 8 inches. There are about 150 players that are at least that tall.
 
 ```{r}
-150/(sevenfooters * 10^9)
+lebron <- 1-pnorm(80, 69, 3)
+150/(lebron * 10^9)
 ```
 
 
