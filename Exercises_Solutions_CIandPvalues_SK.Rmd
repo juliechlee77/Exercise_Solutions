@@ -43,7 +43,7 @@ c(x_hat - 1.96 * se_hat, x_hat + 1.96 * se_hat)
 
 ```{r}
 poll <- polls |>
-  mutate(x_hat = polls$rawpoll_clinton/100,
+  mutate(x_hat = rawpoll_clinton/100,
          se_hat = sqrt(x_hat*(1-x_hat)/samplesize),
          lower = x_hat - 1.96*se_hat,
          upper = x_hat + 1.96*se_hat) |>
