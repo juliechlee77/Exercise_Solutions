@@ -1,0 +1,80 @@
+# Importing data {#importing-data}
+
+## Exercises 
+
+1\. Use the `read_csv` function to read each of the files that the following code saves in the `files` object: 
+
+```{r, eval=FALSE}
+library(readr)
+library(readxl)
+
+path <- system.file("extdata", package = "dslabs")
+files <- list.files(path)
+files
+files[1]
+
+
+dir <- system.file("extdata", package = "dslabs") 
+fullpath <- file.path(dir, files[1])
+fullpath1 <- function(n){ 
+  f=file.path(dir, files[n])
+  read_csv(f)
+}
+
+sapply(1:9, fullpath1)  #1st and 8th cannot read
+
+fullpath1(1)
+fullpath1(2)
+fullpath1(3)
+fullpath1(4)
+fullpath1(5)
+fullpath1(6)
+fullpath1(7)
+fullpath1(8)
+fullpath1(9)
+```
+
+  
+2\. Note that the last one, the `olive` file, gives us a warning. This is because the first line of the file is missing the header for the first column. 
+
+Read the help file for `read_csv` to figure out how to read in the file without reading this header. If you skip the header, you should not get this warning. Save the result to an object called `dat`.
+
+```{r}
+dat = read_csv("olive.csv", header = F) #XX
+
+dat = read_csv("olive.csv", col_names = F)
+
+help("read_csv")
+
+dat = read.csv("C:/Users/user/AppData/Local/R/win-library/4.2/dslabs/extdata/olive.csv",
+               header = F)
+dat = read_csv("C:/Users/user/AppData/Local/R/win-library/4.2/dslabs/extdata/olive.csv",
+               col_names = F)
+```
+
+  
+3\. A problem with the previous approach is that we don't know what the columns represent. Type:
+
+```{r, eval=FALSE}
+names(dat)
+```
+
+to see that the names are not informative.
+
+Use the `readLines` function to read in just the first line (we later learn how to extract values from the output). 
+
+```{r}
+readLines(fullpath,n=1)
+```
+
+
+## Organizing data with spreadsheets
+
+## Exercises 
+
+1\. Pick a measurement you can take on a regular basis. For example, your daily weight or how long it takes you to run 5 miles. Keep a spreadsheet that includes the date, the hour, the measurement, and any other informative variable you think is worth keeping. Do this for 2 weeks. Then make a plot.
+
+```{r, message=FALSE, echo=FALSE}
+tmp <- file.remove("murders.csv")
+```
+
