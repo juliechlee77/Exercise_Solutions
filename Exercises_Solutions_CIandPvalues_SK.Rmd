@@ -79,7 +79,7 @@ re-do exercise 1, but for the difference.
 polls <- polls_us_election_2016 |> 
   filter(enddate >= "2016-10-31" & state == "U.S.")  |>
   mutate(d_hat = rawpoll_clinton / 100 - rawpoll_trump / 100,
-         se_hat = sqrt(2* (rawpoll_clinton/100) * (1- (rawpoll_clinton/100)) / samplesize), #sqrt(2p(1-p)/n)
+         se_hat = 2*sqrt((rawpoll_clinton/100) * (1- (rawpoll_clinton/100)) / samplesize), 
          lower = d_hat - 1.96*se_hat,
          upper = d_hat + 1.96*se_hat) |>
   select(pollster, enddate, d_hat, lower, upper)
