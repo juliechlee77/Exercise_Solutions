@@ -198,7 +198,7 @@ tab |> ggplot(aes(x=continent, y=population/10^6)) +
 ```
 
 Which continent has the country with the biggest population size?
-*Americas*
+*Asia*
 
 ```{r}
 gapminder |> filter(year == 2010) |> group_by(continent) |> select(continent, population)  |> summarise(population=sum(population))
