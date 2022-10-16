@@ -13,6 +13,8 @@ output: html_document
 
 ```{r summaries-barplot-exercise, echo=FALSE}
 library(dslabs)
+library(ggplot2)
+library(tidyverse)
 ds_theme_set()
 data(murders)
 murders |> group_by(region) |>
@@ -96,9 +98,10 @@ heights |>
 Based on this plot, how many males are between 63.5 and 65.5?
   
 a. 10
-*b. 24*
+b. 24
 c. 34
 d. 100
+*47* confirmed by TA
 
 8\. About what **percentage** are shorter than 60 inches?
   
