@@ -10,10 +10,10 @@ data(us_contagious_diseases)
 
 1\. Pie charts are appropriate:
 
-a. When we want to display percentages. --> correct
+a. When we want to display percentages. 
 b. When __ggplot2__ is not available.
 c. When I am in a bakery.
-d. Never. Barplots and tables are always better.
+d. Never. Barplots and tables are always better. -> correct
 
 2\. What is the problem with the plot below:
 
@@ -93,13 +93,19 @@ rate <- dat$count/dat$population*10000*52/dat$weeks_reporting
 Redefine the `state` object so that the levels are re-ordered. Print the new object `state` and its levels so you can see that the vector is not re-ordered by the levels.
 
 ```{r}
-reorder(state, rate)
+state <- reorder(state, rate)
+state
 ```
 
 5\. Now with one line of code, define the `dat` table as done above, but change the use mutate to create a rate variable and re-order the state variable so that the levels are re-ordered by this variable. Then make a barplot using the code above, but for this new `dat`.
 
 ```{r}
-d <- dat |> mutate(rate = count/dat$population*10000*52/dat$weeks_reporting, state = reorder(state, rate)) 
+d <- dat |> mutate(rate = count/population*10000*52/weeks_reporting, state = reorder(state, rate)) 
+d |> ggplot(aes(state, rate)) +
+  geom_bar(stat="identity") +
+  coord_flip() 
+# geom_bar by default counts the rows of x; if you want to specify y you must write stat="identity"; it will give you an error if you try to specify y without writing stat="identity" 
+# vs. geom_col by default you must specify y
 ```
 
   
@@ -135,6 +141,12 @@ murders |> mutate(rate = total/population*100000)
 ```
 
 by region, showing all the points and ordering the regions by their median rate.
+```{r}
+m <- murders |> mutate(rate = total/population*100000, region = reorder(region, rate, FUN=median, na.rm=TRUE)) 
+m |> ggplot(aes(region, rate)) +
+  geom_boxplot() +
+  geom_point()
+```
 
 
 8\. The plots below show three continuous variables. 

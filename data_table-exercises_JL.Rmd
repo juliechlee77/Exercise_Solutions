@@ -80,7 +80,7 @@ murders[state %in% c("New York", "Texas")]
 Create a new data frame called `murders_nw` with only the states from the Northeast and the West. How many states are in this category? 
 ```{r}
 murders_nw <- murders[region %in% c("Northeast", "West")]
-murders_nw$state
+nrow(murders_nw)
 ```
 
 
@@ -114,13 +114,13 @@ data(NHANES)
 
 ```{r}
 NHANES <- setDT(NHANES)
-ref <- NHANES[Gender == "female" & AgeDecade == " 20-29", .(average = mean(BPSysAve, na.rm = TRUE), standard_deviation = sd(BPSysAve, na.rm = TRUE))]
+ref <- NHANES[Gender == "female" & AgeDecade == " 20-29" & !is.na(BPSysAve), .(average = mean(BPSysAve), standard_deviation = sd(BPSysAve))]
 ```
 
 
 2\. Report the min and max values for the same group.
 ```{r}
-NHANES[Gender == "female" & AgeDecade == " 20-29", .(min(BPSysAve, na.rm = TRUE), max(BPSysAve, na.rm= TRUE))]
+NHANES[Gender == "female" & AgeDecade == " 20-29", .(min = min(BPSysAve, na.rm = TRUE), max = max(BPSysAve, na.rm= TRUE))]
 ```
 
 
@@ -137,8 +137,8 @@ NHANES[Gender == "male", .(average = mean(BPSysAve, na.rm = TRUE), standard_devi
 
 5\. For males between the ages of 40-49, compare systolic blood pressure across race as reported in the `Race1` variable. Order the resulting table from lowest to highest average systolic blood pressure.
 ```{r}
-maleage <- NHANES[Gender == "male" & AgeDecade == " 40-49"]
-maleage[order(BPSysAve)]
+maleage <- NHANES[Gender == "male" & AgeDecade == " 40-49" & !is.na(BPSysAve), .(average = mean(BPSysAve)), by = Race1]
+maleage[order(average)]
 ```
 
 

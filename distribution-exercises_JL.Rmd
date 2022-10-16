@@ -253,6 +253,8 @@ library(dslabs)
 data(heights)
 male <- heights$height[heights$sex == "Male"]
 female <- heights$height[heights$sex == "Female"]
+length(male)
+length(female)
 ```
 
 How many measurements do we have for each?
@@ -295,7 +297,7 @@ tab |> ggplot(aes(x=continent, y=population/10^6)) +
 ```
 
 Which continent has the country with the biggest population size?
-  
+Asia
   4\. What continent has the largest median population size?
   Africa
   The median in the boxplot is indicated my a horizontal bold line withing the box. By comparing all median values for every continent, it is obvious that the largest one is for Africa.
