@@ -165,8 +165,8 @@ mean (S > 0)
 
 18\. The Monte Carlo result and the CLT approximation are now much closer.  What could account for this?
 
-a. We are now computing averages instead of sums.
+*a. We are now computing averages instead of sums.*
 b. 2,500 Monte Carlo simulations is not better than 1,000.
-*c. The CLT works better when the sample size is larger. We increased from 1,000 to 2,500.*
+c. The CLT works better when the sample size is larger. We increased from 1,000 to 2,500.
 d. It is not closer. The difference is within rounding error.
 
