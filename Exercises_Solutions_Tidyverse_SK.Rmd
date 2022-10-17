@@ -45,7 +45,7 @@ d. `BOD` is tidy: all small datasets are tidy by definition.
 4\. Which of the following built-in datasets is tidy (you can pick more than one):
 
 a. `BJsales`
-b. `EuStockMarkets`XXX
+b. `EuStockMarkets`
 d. `DNase` XXX
 d. `Formaldehyde`XXX
 e. `Orange` XXX
