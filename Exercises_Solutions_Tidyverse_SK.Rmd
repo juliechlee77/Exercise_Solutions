@@ -45,7 +45,7 @@ d. `BOD` is tidy: all small datasets are tidy by definition.
 4\. Which of the following built-in datasets is tidy (you can pick more than one):
 
 a. `BJsales`
-b. `EuStockMarkets`
+b. `EuStockMarkets`XXX
 d. `DNase` XXX
 d. `Formaldehyde`XXX
 e. `Orange` XXX
@@ -342,6 +342,13 @@ murders |>
   summarize(mean(population)) |> exp()
 ```
 #### Summarize function needs to be told which column name we're looking at
+
+# Better solution
+```{r}
+murders |> summarise(average = exp(mean(log(population)))) |>
+  pull(average)
+```
+
 
 5\. Use the `map_df` to create a data frame with three columns named `n`, `s_n`, and `s_n_2`. The first column should contain the numbers 1 through 100. The second and third columns should each contain the sum of 1 through $n$ with $n$ the row number.  
 
