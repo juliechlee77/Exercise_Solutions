@@ -21,7 +21,7 @@ files
 ```{r}
 library(readr)
 library(readxl)
-read_csv(files)
+cemit <- read_csv(file.path(path, "carbon_emissions.csv"))
 ```
 
   
@@ -30,7 +30,7 @@ read_csv(files)
 Read the help file for `read_csv` to figure out how to read in the file without reading this header. If you skip the header, you should not get this warning. Save the result to an object called `dat`.
 
 ```{r}
-dat <- read_csv("olive.csv", col_names = F)
+dat <- read_csv(file.path(path, "olive.csv"), skip = 1)
 ```
 
 
@@ -46,11 +46,11 @@ to see that the names are not informative.
 Use the `readLines` function to read in just the first line (we later learn how to extract values from the output). 
 
 ```{r}
-readLines(dat)
+readLines(file.path(path, "olive.csv"), n = 1)
 ```
 
 
-
+-----Didn't do this part-----
 
 ## Organizing data with spreadsheets
 
