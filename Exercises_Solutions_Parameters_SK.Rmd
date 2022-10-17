@@ -26,7 +26,7 @@ SEofS = sqrt(Np(1-p)) = sqrt(25*p(1-p))
 
 ```{r}
 S/N = barx
-EofbarX = S/25 = p
+EofbarX = S/25 = p  #(= Np / N)
 ```
 
 
@@ -42,13 +42,14 @@ SE of barX = sqrt(p(1-p)/N)
 ```{r}
 p <- seq(0, 1, length=100) # points between 0,1 at even spaces
 se_p <- sqrt(p*(1-p)/25)
+plot(p, se_p)
 
-library(ggplot2)
+#library(ggplot2)
 
-dat <- data.frame(p = p, se_p = se_p)
+#dat <- data.frame(p = p, se_p = se_p)
 
-ggplot(dat, aes(x=p, y=se_p)) +
-  geom_point()
+#ggplot(dat, aes(x=p, y=se_p)) +
+#  geom_point()
 ```
 
 6\. Copy the code above and put it inside a for-loop to make the plot for $N=25$, $N=100$, and $N=1000$.
@@ -71,17 +72,27 @@ grid.arrange(grobs = g, ncol=3)
 ```
 
 
+# Another solution
+```{r}
+N <- c(25, 100, 1000)
+for (i in 1:3){
+  p <- seq(0, 1, length=N[i])
+  se <- sqrt(25*p*(1-p)/N[i])
+  plot(p,se)
+}
+```
+
+
+
 7\. If we are interested in the difference in proportions, $p - (1-p)$, our estimate is $d = \bar{X} - (1-\bar{X})$. Use the rules we learned about sums of random variables and scaled random variables to derive the expected value of $d$.
 
 $$p - (1-p) = 2p - 1$$
 8\. What is the standard error of $d$?
 
-$$
-\sqrt{p(1-p)/N + (1-p)(1-(1-p))/N}
-=
-\sqrt{2p(1-p)/N}
-$$
-*Textbook says it is 2 x sqrt(p(1-p)/N)
+
+$$Var(\overline X - (1 - \overline X)) =  Var(2\overline X - 1) = 4Var(\overline X) = 4p(1-p)/n \implies SE(\overline X - (1 - \overline X)) = \sqrt{4p(1-p)/n}$$
+
+
 
 9\. If the actual $p=.45$, it means the Republicans are winning by a relatively large margin since $d= -.1$, which is a 10% margin of victory. In this case, what is the standard error of $2\hat{X}-1$ if we take a sample of $N=25$?
 

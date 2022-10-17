@@ -84,6 +84,12 @@ The Celtics must win one of these 4 games.
 (choose(6,4) * 0.5^6) + (choose(6,5) * 0.5^6) + (choose(6,6) * 0.5^6)
 ```
 
+# another solution
+```{r}
+1 - pbinom(3, 6, 0.5)
+# warriors win 3 out of 6
+```
+
 
 11\. Confirm the results of the previous question with a Monte Carlo simulation.
 
@@ -96,6 +102,7 @@ result <- replicate(B, {
 mean(result)
 ```
 
+# Another solution
 ```{r}
 B <- 10000
 prob_win <- function(p){

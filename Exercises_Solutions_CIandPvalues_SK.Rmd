@@ -118,7 +118,7 @@ polls2 |> ggplot(aes(pollster, d_hat-0.021)) +
 10\. Redo the plot that you made for exercise 9, but only for pollsters that took five or more polls.
 
 ```{r}
-polls2 |> group_by(pollster) |> filter(n() > 4) |>
+polls2 |> group_by(pollster) |> filter(n() > 4) |> # or length(pollster) > 4
   ggplot(aes(pollster, d_hat-0.021)) + 
   geom_point() + 
   coord_flip()

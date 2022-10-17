@@ -104,6 +104,7 @@ Redefine the `state` object so that the levels are re-ordered. Print the new obj
 ```{r}
 state <- reorder(state, rate)
 state
+levels(state)
 ```
 
 
